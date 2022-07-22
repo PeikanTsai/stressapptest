@@ -1328,7 +1328,6 @@ int InvertThread::InvertPageDown(struct page_entry *srcpe) {
         unsigned int actual = sourcemem[index];
         sourcemem[index] = ~actual;
       }
-      OsLayer::FastFlush(&sourcemem[i]);
     }
   }
 
@@ -1352,7 +1351,6 @@ int InvertThread::InvertPageUp(struct page_entry *srcpe) {
         unsigned int actual = sourcemem[index];
         sourcemem[index] = ~actual;
       }
-      OsLayer::FastFlush(&sourcemem[i]);
     }
   }
 
