@@ -198,23 +198,26 @@ void OsLayer::GetFeatures() {
   cpuid(&eax, &ebx, &ecx, &edx);
   has_clflush_ = (edx >> 19) & 1;
   has_vector_ = (edx >> 26) & 1;  // SSE2 caps bit.
-
-  logprintf(9, "Log: has clflush: %s, has sse2: %s\n",
-            has_clflush_ ? "true" : "false",
-            has_vector_ ? "true" : "false");
 #elif defined(STRESSAPPTEST_CPU_PPC)
   // All PPC implementations have cache flush instructions.
   has_clflush_ = true;
 #elif defined(STRESSAPPTEST_CPU_MIPS)
   // All MIPS implementations have cache flush instructions.
   has_clflush_ = true;
-#elif defined(STRESSAPPTEST_CPU_ARMV7A) || defined(STRESSAPPTEST_CPU_AARCH64)
+#elif defined(STRESSAPPTEST_CPU_ARMV7A)
   // TODO(nsanders): add detect from /proc/cpuinfo or /proc/self/auxv.
   // For now assume neon and don't run -W if you don't have it.
   has_vector_ = true; // NEON.
+#elif defined(STRESSAPPTEST_CPU_AARCH64)
+  has_vector_ = true; // NEON.
+  has_clflush_ = true;
 #else
 #warning "Unsupported CPU type: unable to determine feature set."
 #endif
+
+  logprintf(9, "Log: has clflush: %s, has vector: %s\n",
+            has_clflush_ ? "true" : "false",
+            has_vector_ ? "true" : "false");
 }
 
 
