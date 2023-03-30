@@ -619,7 +619,7 @@ void WorkerThread::ProcessError(struct ErrorRecord *error,
   os_->FindDimm(error->paddr, dimm_string, sizeof(dimm_string));
 
   // Report parseable error.
-  if (priority < 5) {
+  //if (priority < 5) {
     // Run miscompare error through diagnoser for logging and reporting.
     os_->error_diagnoser_->AddMiscompareError(dimm_string,
                                               reinterpret_cast<uint64>
@@ -639,7 +639,7 @@ void WorkerThread::ProcessError(struct ErrorRecord *error,
               error->expected,
               (error->patternname) ? error->patternname : "None",
               (error->reread == error->expected) ? " read error" : "");
-  }
+  //}
 
 
   // Overwrite incorrect data with correct data to prevent
@@ -724,7 +724,7 @@ int WorkerThread::CheckRegion(void *addr,
                               int offset,
                               int64 pattern_offset) {
   uint64 *memblock = static_cast<uint64*>(addr);
-  const int kErrorLimit = 128;
+  const int kErrorLimit = 1050;
   int errors = 0;
   int overflowerrors = 0;  // Count of overflowed errors.
   bool page_error = false;
@@ -853,7 +853,8 @@ int WorkerThread::CheckRegion(void *addr,
 
   // Process error queue after all errors have been recorded.
   for (int err = 0; err < errors; err++) {
-    int priority = 5;
+    int priority = 0;
+    // always use highest priority to print error
     if (errorcount_ + err < 30)
       priority = 0;  // Bump up the priority for the first few errors.
     ProcessError(&recorded[err], priority, errormessage.c_str());
